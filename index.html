@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de LED</title>
+    <script>
+        function sendCommand(command) {
+            fetch('/control?command=' + command)
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                });
+        }
+
+        function updateHistory() {
+            fetch('/')
+                .then(response => response.text())
+                .then(data => {
+                    // Actualiza el contenido de la página con la nueva respuesta
+                    document.body.innerHTML = data;
+                });
+        }
+
+        // Actualiza el historial cada 2 segundos
+        setInterval(updateHistory, 2000);
+    </script>
+</head>
+<body>
+    <h1>Control de LED</h1>
+    <button onclick="sendCommand('1')">Encender LED</button>
+    <button onclick="sendCommand('0')">Apagar LED</button>
+    
+    <h2>Historial de Eventos</h2>
+    <ul>
+        {% for event in history %}
+            <li>{{ event }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
